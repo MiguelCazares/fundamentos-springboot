@@ -5,20 +5,23 @@ import com.fundamentos.springboot.fundamentos.bean.MyBeanWithDependency;
 import com.fundamentos.springboot.fundamentos.bean.MyBeanWithProperties;
 import com.fundamentos.springboot.fundamentos.component.ComponentDependency;
 import com.fundamentos.springboot.fundamentos.pojo.UserPojo;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FundamentosApplication implements CommandLineRunner {
+public class FundamentalsApplication implements CommandLineRunner {
 
-	private ComponentDependency componentDependency;
-	private MyBean myBean;
-	private MyBeanWithDependency myBeanWithDependency;
-	private MyBeanWithProperties myBeanWithProperties;
-	private UserPojo userPojo;
+	private final Log LOGGER = LogFactory.getLog(FundamentalsApplication.class);
+	private final ComponentDependency componentDependency;
+	private final MyBean myBean;
+	private final MyBeanWithDependency myBeanWithDependency;
+	private final MyBeanWithProperties myBeanWithProperties;
+	private final UserPojo userPojo;
 
-	public  FundamentosApplication(ComponentDependency componentDependency,
+	public FundamentalsApplication(ComponentDependency componentDependency,
 								   MyBean myBean,
 								   MyBeanWithDependency myBeanWithDependency,
 								   MyBeanWithProperties myBeanWithProperties,
@@ -30,7 +33,7 @@ public class FundamentosApplication implements CommandLineRunner {
 		this.userPojo = userPojo;
 	}
 	public static void main(String[] args) {
-		SpringApplication.run(FundamentosApplication.class, args);
+		SpringApplication.run(FundamentalsApplication.class, args);
 	}
 
 	@Override
@@ -41,5 +44,11 @@ public class FundamentosApplication implements CommandLineRunner {
 		String full_name = myBeanWithProperties.function();
 		System.out.println(full_name);
 		System.out.println(userPojo.getEmail() + " " + userPojo.getPassword() + " " + userPojo.getAge());
+		try{
+			int value = 10/0;
+			LOGGER.debug("This is a debug message");
+		}catch(Exception e){
+			LOGGER.error("This is an error message " + e.getMessage());
+		}
 	}
 }
