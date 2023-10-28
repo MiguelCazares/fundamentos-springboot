@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class FundamentalsApplication implements CommandLineRunner {
 	private final MyBeanWithProperties myBeanWithProperties;
 	private final UserPojo userPojo;
 
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
 
 	public FundamentalsApplication(ComponentDependency componentDependency,
 								   MyBean myBean,
@@ -51,10 +52,19 @@ public class FundamentalsApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		//dependencyInjection();
 		saveUserInDataBase();
+		getInformationJpqlFromUser();
+	}
+
+	private void getInformationJpqlFromUser(){
+		LOGGER.info("User with email: " + userRepository.findByEmail("Cazares@gmail.com")
+				.orElseThrow(() -> new RuntimeException("No se encontro el usuario")));
+
+		userRepository.findAndSort("Luis", Sort.by("id").descending())
+				.forEach(user -> LOGGER.info("User with method sort: " + user));
 	}
 
 	private void saveUserInDataBase(){
-		User user1 = new User("Miguel", "Cazares@gamil.com", LocalDate.of(1999, 8, 2));
+		User user1 = new User("Miguel", "Cazares@gmail.com", LocalDate.of(1999, 8, 2));
 		User user2 = new User("Angel", "Soledad@gmail.com", LocalDate.of(1998, 1, 29));
 		User user3 = new User("Luis", "luis@gmai.com", LocalDate.of(1999, 8, 2));
 		User user4 = new User("Luis2", "luis2@gmail.com", LocalDate.of(1999, 8, 2));
