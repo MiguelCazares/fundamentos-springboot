@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootApplication
 public class FundamentalsApplication implements CommandLineRunner {
@@ -61,6 +62,9 @@ public class FundamentalsApplication implements CommandLineRunner {
 
 		userRepository.findAndSort("Luis", Sort.by("id").descending())
 				.forEach(user -> LOGGER.info("User with method sort: " + user));
+
+	 	LOGGER.info("findByEmailAndName: " + userRepository.findByEmailAndName("Cazares@gmail.com", "Miguel")
+				.orElseThrow(() -> new RuntimeException("No se encontro el usuario con el metodo findByEmailAndName")));
 	}
 
 	private void saveUserInDataBase(){
@@ -68,8 +72,9 @@ public class FundamentalsApplication implements CommandLineRunner {
 		User user2 = new User("Angel", "Soledad@gmail.com", LocalDate.of(1998, 1, 29));
 		User user3 = new User("Luis", "luis@gmai.com", LocalDate.of(1999, 8, 2));
 		User user4 = new User("Luis2", "luis2@gmail.com", LocalDate.of(1999, 8, 2));
+		User user5 = new User("Miguel", "otheremail", LocalDate.of(1999, 8, 2));
 
-		List<User> list = Arrays.asList(user1, user2, user3, user4);
+		List<User> list = Arrays.asList(user1, user2, user3, user4, user5);
 
 		list.forEach(userRepository::save);
 	}
