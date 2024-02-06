@@ -7,6 +7,7 @@ import com.fundamentos.springboot.fundamentos.component.ComponentDependency;
 import com.fundamentos.springboot.fundamentos.entity.User;
 import com.fundamentos.springboot.fundamentos.pojo.UserPojo;
 import com.fundamentos.springboot.fundamentos.repository.UserRepository;
+import com.fundamentos.springboot.fundamentos.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -15,10 +16,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @SpringBootApplication
 public class FundamentalsApplication implements CommandLineRunner {
@@ -31,19 +30,22 @@ public class FundamentalsApplication implements CommandLineRunner {
 	private final UserPojo userPojo;
 
 	private final UserRepository userRepository;
+	private final UserService userService;
 
 	public FundamentalsApplication(ComponentDependency componentDependency,
 								   MyBean myBean,
 								   MyBeanWithDependency myBeanWithDependency,
 								   MyBeanWithProperties myBeanWithProperties,
 								   UserPojo userPojo,
-								   UserRepository userRepository) {
+								   UserRepository userRepository,
+								   UserService userService) {
 		this.componentDependency = componentDependency;
 		this.myBean = myBean;
 		this.myBeanWithDependency = myBeanWithDependency;
 		this.myBeanWithProperties = myBeanWithProperties;
 		this.userPojo = userPojo;
 		this.userRepository = userRepository;
+		this.userService = userService;
 	}
 	public static void main(String[] args) {
 		SpringApplication.run(FundamentalsApplication.class, args);
@@ -52,8 +54,22 @@ public class FundamentalsApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		//dependencyInjection();
-		saveUserInDataBase();
-		getInformationJpqlFromUser();
+		//saveUserInDataBase();
+		//getInformationJpqlFromUser();
+		saveWithErrorTransactional();
+	}
+
+	private void saveWithErrorTransactional(){
+		User user1 = new User("Miguel", "cazares@gmail.com", LocalDate.of(1999, 8, 2));
+		User user2 = new User("Angel", "cazares2@gmail.com", LocalDate.of(1998, 1, 29));
+		List<User> users = Arrays.asList(user1, user2);
+		try {
+			userService.saveTransactional(users);
+		} catch (Exception e){
+			LOGGER.error("This is an exception inside the transactional method " + e.getMessage());
+		}
+		userService.getAllUsers()
+				.forEach(user -> LOGGER.info("This is the user inside the transactional method: " + user));
 	}
 
 	private void getInformationJpqlFromUser(){
