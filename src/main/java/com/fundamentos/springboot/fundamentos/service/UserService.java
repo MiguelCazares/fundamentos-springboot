@@ -25,7 +25,25 @@ public class UserService {
                 .forEach(userRepository::save);
     }
 
+    public User save(User newUser) {
+        return userRepository.save(newUser);
+    }
+
     public  List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public void delete(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public User update(User newUser, Long id) {
+        return userRepository.findById(id)
+                .map(user -> {
+                    user.setEmail(newUser.getEmail());
+                    user.setBirthDate(newUser.getBirthDate());
+                    user.setName(newUser.getName());
+                    return userRepository.save(user);
+                }).orElseThrow();
     }
 }

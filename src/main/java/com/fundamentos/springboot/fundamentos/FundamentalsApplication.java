@@ -53,9 +53,9 @@ public class FundamentalsApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		//dependencyInjection();
-		//saveUserInDataBase();
-		//getInformationJpqlFromUser();
+		dependencyInjection();
+		saveUserInDataBase();
+		getInformationJpqlFromUser();
 		saveWithErrorTransactional();
 	}
 

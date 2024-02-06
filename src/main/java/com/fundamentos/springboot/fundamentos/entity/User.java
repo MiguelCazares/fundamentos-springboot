@@ -1,5 +1,6 @@
 package com.fundamentos.springboot.fundamentos.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -24,7 +25,7 @@ public class User {
     private LocalDate birthDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonIgnore
     private List<Post> posts = new ArrayList<>();
 
     public User() {
